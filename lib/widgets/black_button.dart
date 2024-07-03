@@ -5,10 +5,12 @@ class BlackButton extends StatelessWidget {
   const BlackButton({
     super.key,
     required this.title,
+    this.active = true,
     required this.onPressed,
   });
 
   final String title;
+  final bool active;
   final void Function() onPressed;
 
   @override
@@ -20,13 +22,13 @@ class BlackButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(8),
       ),
       child: CupertinoButton(
-        onPressed: onPressed,
+        onPressed: active ? onPressed : null,
         padding: EdgeInsets.zero,
         child: Center(
           child: Text(
             title,
-            style: const TextStyle(
-              color: Colors.white,
+            style: TextStyle(
+              color: active ? Colors.white : Colors.grey,
               fontSize: 16,
               fontWeight: FontWeight.w500,
               fontFamily: 'SFProText',
