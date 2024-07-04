@@ -68,6 +68,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 const SizedBox(width: 20),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       'Home',
@@ -93,7 +94,9 @@ class _HomeScreenState extends State<HomeScreen> {
                       color: Colors.white,
                     ),
                     Text(
-                      '${incomes + expenses}€',
+                      currency == '\$'
+                          ? '${convertDollarToEuro(incomes + expenses)}€'
+                          : '',
                       style: TextStyle(
                         color: const Color(0xffffffff).withOpacity(0.5),
                         fontSize: 48,
@@ -105,6 +108,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 const Spacer(),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Income',
@@ -134,10 +138,29 @@ class _HomeScreenState extends State<HomeScreen> {
                         ),
                       ),
                     ),
+                    const Text(
+                      'Last',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    Text(
+                      '$lastIncome$currency',
+                      style: TextStyle(
+                        color: const Color(0xffffffff).withOpacity(0.5),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(width: 16),
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     const Text(
                       'Expense',
@@ -165,6 +188,24 @@ class _HomeScreenState extends State<HomeScreen> {
                             fontFamily: 'Poppins',
                           ),
                         ),
+                      ),
+                    ),
+                    const Text(
+                      'Last',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
+                    Text(
+                      '$lastExpense$currency',
+                      style: TextStyle(
+                        color: const Color(0xffffffff).withOpacity(0.5),
+                        fontSize: 12,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
                       ),
                     ),
                   ],
@@ -235,7 +276,15 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 11),
-                    const Text('History'),
+                    const Text(
+                      'History',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'Poppins',
+                      ),
+                    ),
                     const SizedBox(height: 8),
                     Container(
                       height: 8,
@@ -243,37 +292,52 @@ class _HomeScreenState extends State<HomeScreen> {
                       decoration: BoxDecoration(
                         color: Colors.black,
                         borderRadius: BorderRadius.circular(4),
+                        boxShadow: [
+                          BoxShadow(
+                            color: const Color(0xff000000).withOpacity(0.25),
+                            blurRadius: 4,
+                            spreadRadius: 0,
+                            offset: const Offset(0, 4),
+                          )
+                        ],
                       ),
                     ),
                     const SizedBox(height: 2),
                     Expanded(
-                      child: ListView(
-                        padding: const EdgeInsets.all(24),
-                        children: [
-                          ...List.generate(
-                            incomesList.length,
-                            (index) {
-                              return _IncomeCard(
-                                model: incomesList[index],
-                                onPressed: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) {
-                                        return IncomeEditScreen(
-                                          model: incomesList[index],
-                                        );
-                                      },
-                                    ),
-                                  ).then((value) async {
-                                    log('GET CALLED');
-                                    await getIncomes();
-                                  });
-                                },
-                              );
-                            },
-                          ),
-                        ],
+                      child: RawScrollbar(
+                        padding: const EdgeInsets.only(right: 8),
+                        thumbColor: const Color(0xff3200BF).withOpacity(0.5),
+                        radius: const Radius.circular(12),
+                        thumbVisibility: true,
+                        thickness: 7,
+                        child: ListView(
+                          padding: const EdgeInsets.all(24),
+                          children: [
+                            ...List.generate(
+                              incomesList.length,
+                              (index) {
+                                return _IncomeCard(
+                                  model: incomesList[index],
+                                  onPressed: () {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                        builder: (context) {
+                                          return IncomeEditScreen(
+                                            model: incomesList[index],
+                                          );
+                                        },
+                                      ),
+                                    ).then((value) async {
+                                      log('GET CALLED');
+                                      await getIncomes();
+                                    });
+                                  },
+                                );
+                              },
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ],

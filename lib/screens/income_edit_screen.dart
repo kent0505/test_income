@@ -4,6 +4,7 @@ import 'package:hive_flutter/hive_flutter.dart';
 import 'package:test_income/models/income_model.dart';
 import 'package:test_income/widgets/appbar.dart';
 import 'package:test_income/widgets/black_button.dart';
+import 'package:test_income/widgets/delete_dialog.dart';
 import 'package:test_income/widgets/txt_field.dart';
 
 class IncomeEditScreen extends StatefulWidget {
@@ -65,6 +66,24 @@ class _IncomeEditScreenState extends State<IncomeEditScreen> {
     });
   }
 
+  void onDelete() async {
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return DeleteDialog(
+          title: 'Delete?',
+          onYes: () async {
+            incomesList.removeWhere((element) => element.id == widget.model.id);
+            await updateIncomes();
+            await updateIncomes().then((value) {
+              Navigator.pop(context);
+            });
+          },
+        );
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -88,7 +107,7 @@ class _IncomeEditScreenState extends State<IncomeEditScreen> {
       resizeToAvoidBottomInset: false,
       body: Column(
         children: [
-          const Appbar(),
+          Appbar(onDelete: onDelete),
           Expanded(
             child: ListView(
               padding: EdgeInsets.zero,

@@ -7,6 +7,8 @@ String username = '';
 String currency = '\$';
 int expenses = 0;
 int incomes = 0;
+int lastExpense = 0;
+int lastIncome = 0;
 
 Future<void> getData() async {
   final prefs = await SharedPreferences.getInstance();
@@ -16,6 +18,8 @@ Future<void> getData() async {
   currency = prefs.getString('currency') ?? '\$';
   expenses = prefs.getInt('expenses') ?? 0;
   incomes = prefs.getInt('incomes') ?? 0;
+  lastExpense = prefs.getInt('lastExpense') ?? 0;
+  lastIncome = prefs.getInt('lastIncome') ?? 0;
 
   log('onboarding = $onboarding');
   log('username = $username');
@@ -39,6 +43,22 @@ Future<void> saveIncomes() async {
   await getData();
 }
 
+Future<void> saveLastIncomes(bool income, int value) async {
+  final prefs = await SharedPreferences.getInstance();
+  if (income) {
+    prefs.setInt('lastIncome', value);
+  } else {
+    prefs.setInt('lastExpense', value);
+  }
+  await getData();
+}
+
 int getTimestamp() {
   return DateTime.now().millisecondsSinceEpoch ~/ 1000;
+}
+
+int convertDollarToEuro(int dollars) {
+  double euroRate = 0.92;
+  double euros = dollars * euroRate;
+  return euros.toInt();
 }

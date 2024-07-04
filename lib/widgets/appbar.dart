@@ -2,7 +2,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class Appbar extends StatelessWidget {
-  const Appbar({super.key});
+  const Appbar({super.key, this.onDelete});
+
+  final void Function()? onDelete;
 
   @override
   Widget build(BuildContext context) {
@@ -39,6 +41,33 @@ class Appbar extends StatelessWidget {
               ],
             ),
           ),
+          if (onDelete != null) ...[
+            const Spacer(),
+            CupertinoButton(
+              onPressed: onDelete,
+              padding: EdgeInsets.zero,
+              child: const Row(
+                children: [
+                  SizedBox(width: 15),
+                  Text(
+                    'Delete',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'SFProText',
+                    ),
+                  ),
+                  SizedBox(width: 5),
+                  Icon(
+                    Icons.delete,
+                    color: Colors.white,
+                  ),
+                  SizedBox(width: 5),
+                ],
+              ),
+            ),
+          ],
         ],
       ),
     );

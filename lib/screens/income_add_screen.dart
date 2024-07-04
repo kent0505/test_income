@@ -66,6 +66,7 @@ class _IncomeAddScreenState extends State<IncomeAddScreen> {
         income: widget.income,
       ),
     );
+    await saveLastIncomes(widget.income, int.parse(controller2.text));
     await updateIncomes().then((value) {
       Navigator.pop(context);
     });
