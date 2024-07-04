@@ -1,7 +1,7 @@
-import 'dart:developer';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:test_income/screens/home_screen.dart';
+import 'package:test_income/utils/utils.dart';
 import 'package:test_income/widgets/black_button.dart';
 import 'package:test_income/widgets/txt_field.dart';
 
@@ -35,9 +35,18 @@ class _NameScreenState extends State<NameScreen> {
     onChanged();
   }
 
-  void onGo() {
-    log(controller1.text);
-    log(controller2.text);
+  void onGo() async {
+    await saveUser(controller1.text, controller2.text).then((value) {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+          builder: (context) {
+            return const HomeScreen();
+          },
+        ),
+        (route) => false,
+      );
+    });
   }
 
   @override

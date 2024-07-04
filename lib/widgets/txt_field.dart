@@ -8,6 +8,7 @@ class TxtField extends StatelessWidget {
     this.hintText = '...',
     this.limit = 20,
     this.borderRadius = 8,
+    this.number = false,
     required this.onChanged,
   });
 
@@ -15,6 +16,7 @@ class TxtField extends StatelessWidget {
   final String hintText;
   final int limit;
   final double borderRadius;
+  final bool number;
   final void Function() onChanged;
 
   @override
@@ -28,23 +30,28 @@ class TxtField extends StatelessWidget {
       child: TextField(
         controller: controller,
         textAlign: TextAlign.center,
+        keyboardType: number ? TextInputType.number : null,
         inputFormatters: [
-          LengthLimitingTextInputFormatter(limit),
+          if (number) ...[
+            FilteringTextInputFormatter.digitsOnly,
+            LengthLimitingTextInputFormatter(7),
+          ] else
+            LengthLimitingTextInputFormatter(limit),
         ],
         textCapitalization: TextCapitalization.sentences,
         style: const TextStyle(
           color: Colors.white,
           fontSize: 16,
-          fontWeight: FontWeight.w700,
-          fontFamily: 'Inter',
+          fontWeight: FontWeight.w500,
+          fontFamily: 'SFProText',
         ),
         decoration: InputDecoration(
           hintText: hintText,
           hintStyle: TextStyle(
             color: const Color(0xffFFFFFF).withOpacity(0.5),
             fontSize: 16,
-            fontWeight: FontWeight.w700,
-            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            fontFamily: 'SFProText',
           ),
           focusedBorder: const OutlineInputBorder(
             borderSide: BorderSide(color: Colors.transparent),
