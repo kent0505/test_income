@@ -4,16 +4,16 @@ import 'package:test_income/widgets/appbar.dart';
 import 'package:test_income/widgets/black_button.dart';
 import 'package:test_income/widgets/txt_field.dart';
 
-class IncomeAddPage extends StatefulWidget {
-  const IncomeAddPage({super.key, required this.income});
+class IncomeAddScreen extends StatefulWidget {
+  const IncomeAddScreen({super.key, required this.income});
 
   final bool income;
 
   @override
-  State<IncomeAddPage> createState() => _IncomeAddPageState();
+  State<IncomeAddScreen> createState() => _IncomeAddScreenState();
 }
 
-class _IncomeAddPageState extends State<IncomeAddPage> {
+class _IncomeAddScreenState extends State<IncomeAddScreen> {
   final controller1 = TextEditingController();
   final controller2 = TextEditingController();
   final controller3 = TextEditingController();
