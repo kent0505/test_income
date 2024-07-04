@@ -1,5 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:test_income/models/income_model.dart';
+import 'package:test_income/utils/utils.dart';
 import 'package:test_income/widgets/appbar.dart';
 import 'package:test_income/widgets/black_button.dart';
 import 'package:test_income/widgets/txt_field.dart';
@@ -20,6 +25,23 @@ class _IncomeAddScreenState extends State<IncomeAddScreen> {
 
   bool buttonActive = false;
 
+  List<IncomeModel> incomesList = [];
+
+  Future<void> getIncomes() async {
+    final box = await Hive.openBox('incomebox');
+    List data = box.get('incomes') ?? [];
+    setState(() {
+      incomesList = data.cast<IncomeModel>();
+    });
+    log(incomesList.length.toString());
+  }
+
+  Future<void> updateIncomes() async {
+    final box = await Hive.openBox('incomebox');
+    box.put('incomes', incomesList);
+    incomesList = await box.get('incomes');
+  }
+
   void onChanged() {
     setState(() {
       if (controller1.text.isEmpty) {
@@ -34,7 +56,26 @@ class _IncomeAddScreenState extends State<IncomeAddScreen> {
     });
   }
 
-  void onGo() {}
+  void onGo() async {
+    incomesList.add(
+      IncomeModel(
+        id: getTimestamp(),
+        target: controller1.text,
+        amount: int.parse(controller2.text),
+        category: controller3.text,
+        income: widget.income,
+      ),
+    );
+    await updateIncomes().then((value) {
+      Navigator.pop(context);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getIncomes();
+  }
 
   @override
   void dispose() {

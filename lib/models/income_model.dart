@@ -22,7 +22,7 @@ class IncomeModel {
   });
 }
 
-class ExpenseAdapter extends TypeAdapter<IncomeModel> {
+class IncomeAdapter extends TypeAdapter<IncomeModel> {
   @override
   final typeId = 0;
 

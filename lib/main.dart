@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:test_income/models/income_model.dart';
 import 'package:test_income/screens/splash_screen.dart';
 
-void main() {
+void main() async {
+  await Hive.initFlutter();
+  // await Hive.deleteBoxFromDisk('incomebox');
+  Hive.registerAdapter(IncomeAdapter());
   runApp(const MyApp());
 }
 

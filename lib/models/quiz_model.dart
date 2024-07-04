@@ -1,8 +1,10 @@
 class QuizModel {
   final String question;
+  final String image;
   final List<AnswerModel> answers;
   QuizModel({
     required this.question,
+    required this.image,
     required this.answers,
   });
 }
@@ -48,7 +50,12 @@ QuizModel getQuiz1() {
         answer: 'Set interest rates for the central bank', correct: false),
   ];
   answers.shuffle();
-  return QuizModel(question: 'What do commercial banks do?', answers: answers);
+  return QuizModel(
+    question: 'What do commercial banks do?',
+    image:
+        'https://cdn.corporatefinanceinstitute.com/assets/AdobeStock_1080430-1024x686.jpeg',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz2() {
@@ -60,8 +67,11 @@ QuizModel getQuiz2() {
   ];
   answers.shuffle();
   return QuizModel(
-      question: 'How do central banks influence the economy?',
-      answers: answers);
+    question: 'How do central banks influence the economy?',
+    image:
+        'https://insigniam.com/wp-content/uploads/2023/05/Insigniam_Economy-scaled.jpg',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz3() {
@@ -79,8 +89,11 @@ QuizModel getQuiz3() {
   ];
   answers.shuffle();
   return QuizModel(
-      question: 'Difference between retail and investment banking?',
-      answers: answers);
+    question: 'Difference between retail and investment banking?',
+    image:
+        'https://media.licdn.com/dms/image/D4D12AQFduBHH5Ti_Rw/article-cover_image-shrink_600_2000/0/1695070467834?e=2147483647&v=beta&t=TX6V5deVSguA5EM19N3k1iQykUHCMKpMJHpjO-HUiP0',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz4() {
@@ -93,7 +106,11 @@ QuizModel getQuiz4() {
   ];
   answers.shuffle();
   return QuizModel(
-      question: 'How do banks manage lending risk?', answers: answers);
+    question: 'How do banks manage lending risk?',
+    image:
+        'https://reciprocity.com/wp-content/uploads/2022/05/article_risk-management-software-banks_featured-img_730x270.jpg',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz5() {
@@ -104,7 +121,11 @@ QuizModel getQuiz5() {
   ];
   answers.shuffle();
   return QuizModel(
-      question: 'Impact of fintech on traditional banking?', answers: answers);
+    question: 'Impact of fintech on traditional banking?',
+    image:
+        'https://i0.wp.com/franknez.com/wp-content/uploads/2023/08/FinTech.jpg?resize=676%2C405&ssl=1',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz6() {
@@ -115,7 +136,12 @@ QuizModel getQuiz6() {
 
   answers.shuffle();
   answers.add(AnswerModel(answer: 'Same thing', correct: false));
-  return QuizModel(question: 'Budget vs. financial plan?', answers: answers);
+  return QuizModel(
+    question: 'Budget vs financial plan?',
+    image:
+        'https://dfpi.ca.gov/wp-content/uploads/sites/337/2024/01/coin-Piles.jpg',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz7() {
@@ -125,7 +151,12 @@ QuizModel getQuiz7() {
     AnswerModel(answer: 'Only short-term', correct: false),
   ];
   answers.shuffle();
-  return QuizModel(question: 'Compound interest benefit?', answers: answers);
+  return QuizModel(
+    question: 'Compound interest benefit?',
+    image:
+        'https://trustera.org.uk/wp-content/uploads/2023/12/Compound-Interest-Make-Your-Money-Work-for-You.jpg',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz8() {
@@ -136,8 +167,11 @@ QuizModel getQuiz8() {
   ];
   answers.shuffle();
   return QuizModel(
-      question: 'Components of a personal financial statement?',
-      answers: answers);
+    question: 'Components of a personal financial statement?',
+    image:
+        'https://cloudinary.hbs.edu/hbsit/image/upload/s--sbHguciI--/f_auto,c_fill,h_375,w_750,/v20200101/32CD024732B5A4E25F0BD47CA4E468C3.jpg',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz9() {
@@ -147,7 +181,12 @@ QuizModel getQuiz9() {
     AnswerModel(answer: 'Only high-risk assets', correct: false),
   ];
   answers.shuffle();
-  return QuizModel(question: 'Diversification benefit?', answers: answers);
+  return QuizModel(
+    question: 'Diversification benefit?',
+    image:
+        'https://www6.royalbank.com/assets/di-secure/images/article/investing-academy/2021/what-is-diversification-928x529.jpg',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz10() {
@@ -157,7 +196,12 @@ QuizModel getQuiz10() {
     AnswerModel(answer: 'Guaranteed returns; Cons: No limit', correct: false),
   ];
   answers.shuffle();
-  return QuizModel(question: 'Credit card pros and cons?', answers: answers);
+  return QuizModel(
+    question: 'Credit card pros and cons?',
+    image:
+        'https://www.forbes.com/advisor/wp-content/uploads/2022/07/credit_cards.jpeg-1-1.jpg',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz11() {
@@ -167,7 +211,12 @@ QuizModel getQuiz11() {
     AnswerModel(answer: 'A government bond', correct: false),
   ];
   answers.shuffle();
-  return QuizModel(question: 'What is Bitcoin?', answers: answers);
+  return QuizModel(
+    question: 'What is Bitcoin?',
+    image:
+        'https://forkast.news/wp-content/uploads/2023/10/Bitcoin-Silverbullet-4-1260x706.png',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz12() {
@@ -178,7 +227,11 @@ QuizModel getQuiz12() {
   ];
   answers.shuffle();
   return QuizModel(
-      question: 'How are cryptocurrencies stored?', answers: answers);
+    question: 'How are cryptocurrencies stored?',
+    image:
+        'https://www.yrcharisma.com/wp-content/uploads/2018/02/feat-image-1-1080x675.jpg',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz13() {
@@ -188,7 +241,12 @@ QuizModel getQuiz13() {
     AnswerModel(answer: 'A social media platform', correct: false),
   ];
   answers.shuffle();
-  return QuizModel(question: 'What is blockchain?', answers: answers);
+  return QuizModel(
+    question: 'What is blockchain?',
+    image:
+        'https://cdn.corporatefinanceinstitute.com/assets/AdobeStock_280230556-scaled.jpeg',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz14() {
@@ -198,7 +256,12 @@ QuizModel getQuiz14() {
     AnswerModel(answer: 'By government issuance', correct: false),
   ];
   answers.shuffle();
-  return QuizModel(question: 'How are new bitcoins created?', answers: answers);
+  return QuizModel(
+    question: 'How are new bitcoins created?',
+    image:
+        'https://images.squarespace-cdn.com/content/v1/593bf4fa46c3c411477261b8/1595353028770-V78UA8YGYT10JUK5VZXJ/How+Much+Was+Bitcoin+in+2009%3F.jpg',
+    answers: answers,
+  );
 }
 
 QuizModel getQuiz15() {
@@ -208,5 +271,10 @@ QuizModel getQuiz15() {
     AnswerModel(answer: 'Sending emails', correct: false),
   ];
   answers.shuffle();
-  return QuizModel(question: 'What is Ethereum used for?', answers: answers);
+  return QuizModel(
+    question: 'What is Ethereum used for?',
+    image:
+        'https://i-invdn-com.investing.com/news/Ethereum_800x533_L_1556445201.jpg',
+    answers: answers,
+  );
 }

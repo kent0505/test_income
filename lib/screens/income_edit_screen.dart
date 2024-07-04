@@ -1,24 +1,42 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:test_income/models/income_model.dart';
 import 'package:test_income/widgets/appbar.dart';
 import 'package:test_income/widgets/black_button.dart';
 import 'package:test_income/widgets/txt_field.dart';
 
-class IncomeEditPage extends StatefulWidget {
-  const IncomeEditPage({super.key, required this.income});
+class IncomeEditScreen extends StatefulWidget {
+  const IncomeEditScreen({super.key, required this.model});
 
-  final bool income;
+  final IncomeModel model;
 
   @override
-  State<IncomeEditPage> createState() => _IncomeEditPageState();
+  State<IncomeEditScreen> createState() => _IncomeEditScreenState();
 }
 
-class _IncomeEditPageState extends State<IncomeEditPage> {
+class _IncomeEditScreenState extends State<IncomeEditScreen> {
   final controller1 = TextEditingController();
   final controller2 = TextEditingController();
   final controller3 = TextEditingController();
 
   bool buttonActive = false;
+
+  List<IncomeModel> incomesList = [];
+
+  Future<void> getIncomes() async {
+    final box = await Hive.openBox('incomebox');
+    List data = box.get('incomes') ?? [];
+    setState(() {
+      incomesList = data.cast<IncomeModel>();
+    });
+  }
+
+  Future<void> updateIncomes() async {
+    final box = await Hive.openBox('incomebox');
+    box.put('incomes', incomesList);
+    incomesList = await box.get('incomes');
+  }
 
   void onChanged() {
     setState(() {
@@ -34,7 +52,27 @@ class _IncomeEditPageState extends State<IncomeEditPage> {
     });
   }
 
-  void onGo() {}
+  void onGo() async {
+    for (IncomeModel income in incomesList) {
+      if (income.id == widget.model.id) {
+        income.target = controller1.text;
+        income.amount = int.parse(controller2.text);
+        income.category = controller3.text;
+      }
+    }
+    await updateIncomes().then((value) {
+      Navigator.pop(context);
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    getIncomes();
+    controller1.text = widget.model.target;
+    controller2.text = widget.model.amount.toString();
+    controller3.text = widget.model.category;
+  }
 
   @override
   void dispose() {
@@ -57,7 +95,7 @@ class _IncomeEditPageState extends State<IncomeEditPage> {
               children: [
                 Center(
                   child: Text(
-                    widget.income ? 'Income' : 'Expense',
+                    widget.model.income ? 'Income' : 'Expense',
                     style: const TextStyle(
                       color: Colors.white,
                       fontSize: 32,

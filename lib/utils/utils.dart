@@ -31,3 +31,14 @@ Future<void> saveUser(String name, String currency) async {
   prefs.setBool('onboarding', false);
   await getData();
 }
+
+Future<void> saveIncomes() async {
+  final prefs = await SharedPreferences.getInstance();
+  prefs.setInt('expenses', expenses);
+  prefs.setInt('incomes', incomes);
+  await getData();
+}
+
+int getTimestamp() {
+  return DateTime.now().millisecondsSinceEpoch ~/ 1000;
+}

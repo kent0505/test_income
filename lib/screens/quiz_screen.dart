@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:test_income/models/quiz_model.dart';
@@ -151,14 +152,26 @@ class _QuizScreenState extends State<QuizScreen> {
                               ],
                             ),
                             const SizedBox(height: 27),
-                            Container(
-                              height: 170,
-                              width: 320,
-                              decoration: BoxDecoration(
-                                color: Colors.grey,
-                                borderRadius: BorderRadius.circular(12),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(12),
+                              child: SizedBox(
+                                height: 170,
+                                width: 320,
+                                child: CachedNetworkImage(
+                                  imageUrl: quizes[questionIndex].image,
+                                  height: 170,
+                                  fit: BoxFit.fill,
+                                ),
                               ),
                             ),
+                            // Container(
+                            //   height: 170,
+                            //   width: 320,
+                            //   decoration: BoxDecoration(
+                            //     color: Colors.grey,
+                            //     borderRadius: BorderRadius.circular(12),
+                            //   ),
+                            // ),
                             const SizedBox(height: 10),
                             Text(
                               quizes[questionIndex].question,

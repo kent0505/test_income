@@ -1,6 +1,11 @@
+import 'dart:developer';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:hive_flutter/hive_flutter.dart';
+import 'package:test_income/models/income_model.dart';
 import 'package:test_income/screens/income_add_screen.dart';
+import 'package:test_income/screens/income_edit_screen.dart';
 import 'package:test_income/screens/quiz_tab.dart';
 import 'package:test_income/screens/settings_tab.dart';
 import 'package:test_income/utils/utils.dart';
@@ -14,6 +19,31 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   int pageIndex = 0;
+
+  List<IncomeModel> incomesList = [];
+
+  Future<void> getIncomes() async {
+    final box = await Hive.openBox('incomebox');
+    List data = box.get('incomes') ?? [];
+    setState(() {
+      incomesList = data.cast<IncomeModel>();
+    });
+    log(incomesList.length.toString());
+    for (IncomeModel income in incomesList) {
+      if (income.income) {
+        incomes = incomes + income.amount;
+      } else {
+        expenses = expenses + income.amount;
+      }
+    }
+    await saveIncomes();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    if (pageIndex == 0) getIncomes();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -143,14 +173,44 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
             const SizedBox(height: 10),
-            const Row(
+            Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                SizedBox(width: 33),
-                _AddButton(true),
-                Spacer(),
-                _AddButton(false),
-                SizedBox(width: 33),
+                const SizedBox(width: 33),
+                _AddButton(
+                  income: true,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const IncomeAddScreen(income: true);
+                        },
+                      ),
+                    ).then((value) async {
+                      log('GET CALLED');
+                      await getIncomes();
+                    });
+                  },
+                ),
+                const Spacer(),
+                _AddButton(
+                  income: false,
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) {
+                          return const IncomeAddScreen(income: false);
+                        },
+                      ),
+                    ).then((value) async {
+                      log('GET CALLED');
+                      await getIncomes();
+                    });
+                  },
+                ),
+                const SizedBox(width: 33),
               ],
             ),
             const SizedBox(height: 23),
@@ -189,17 +249,30 @@ class _HomeScreenState extends State<HomeScreen> {
                     Expanded(
                       child: ListView(
                         padding: const EdgeInsets.all(24),
-                        children: const [
-                          Text('Aaa'),
-                          Text('Aaa'),
-                          Text('Aaa'),
-                          Text('Aaa'),
-                          Text('Aaa'),
-                          Text('Aaa'),
-                          Text('Aaa'),
-                          Text('Aaa'),
-                          Text('Aaa'),
-                          Text('Aaa'),
+                        children: [
+                          ...List.generate(
+                            incomesList.length,
+                            (index) {
+                              return _IncomeCard(
+                                model: incomesList[index],
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) {
+                                        return IncomeEditScreen(
+                                          model: incomesList[index],
+                                        );
+                                      },
+                                    ),
+                                  ).then((value) async {
+                                    log('GET CALLED');
+                                    await getIncomes();
+                                  });
+                                },
+                              );
+                            },
+                          ),
                         ],
                       ),
                     ),
@@ -224,9 +297,13 @@ class _HomeScreenState extends State<HomeScreen> {
 }
 
 class _AddButton extends StatelessWidget {
-  const _AddButton(this.income);
+  const _AddButton({
+    required this.income,
+    required this.onPressed,
+  });
 
   final bool income;
+  final void Function() onPressed;
 
   @override
   Widget build(BuildContext context) {
@@ -238,16 +315,7 @@ class _AddButton extends StatelessWidget {
         borderRadius: BorderRadius.circular(18),
       ),
       child: CupertinoButton(
-        onPressed: () {
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) {
-                return IncomeAddScreen(income: income);
-              },
-            ),
-          );
-        },
+        onPressed: onPressed,
         padding: EdgeInsets.zero,
         child: Text(
           income ? 'Income' : 'Expense',
@@ -420,6 +488,93 @@ class TabWidget extends StatelessWidget {
           ),
           const SizedBox(width: 50),
         ],
+      ),
+    );
+  }
+}
+
+class _IncomeCard extends StatelessWidget {
+  const _IncomeCard({
+    required this.model,
+    required this.onPressed,
+  });
+
+  final IncomeModel model;
+  final void Function() onPressed;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 60,
+      margin: const EdgeInsets.symmetric(vertical: 7),
+      padding: const EdgeInsets.symmetric(horizontal: 13),
+      decoration: BoxDecoration(
+        color: const Color(0xff000000).withOpacity(0.24),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: CupertinoButton(
+        onPressed: onPressed,
+        padding: EdgeInsets.zero,
+        child: Row(
+          children: [
+            SizedBox(
+              width: 90,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    model.income ? 'Income' : 'Expense',
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'SFProText',
+                    ),
+                  ),
+                  Text(
+                    model.target,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      color: const Color(0xffffffff).withOpacity(0.5),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'SFProText',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const Spacer(),
+            Text(
+              '${model.amount}$currency',
+              style: const TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+                fontFamily: 'SFProText',
+              ),
+            ),
+            const Spacer(),
+            SizedBox(
+              width: 90,
+              child: Row(
+                children: [
+                  const Spacer(),
+                  Text(
+                    model.category,
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      fontFamily: 'SFProText',
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
