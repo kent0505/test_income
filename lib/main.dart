@@ -5,7 +5,6 @@ import 'package:test_income/screens/splash_screen.dart';
 
 void main() async {
   await Hive.initFlutter();
-  // await Hive.deleteBoxFromDisk('incomebox');
   Hive.registerAdapter(IncomeAdapter());
   runApp(const MyApp());
 }

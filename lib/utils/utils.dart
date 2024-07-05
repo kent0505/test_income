@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 bool onboarding = true;
@@ -12,7 +10,6 @@ int lastIncome = 0;
 
 Future<void> getData() async {
   final prefs = await SharedPreferences.getInstance();
-  // await prefs.remove('onboarding');
   onboarding = prefs.getBool('onboarding') ?? true;
   username = prefs.getString('username') ?? 'User';
   currency = prefs.getString('currency') ?? '\$';
@@ -20,12 +17,6 @@ Future<void> getData() async {
   incomes = prefs.getInt('incomes') ?? 0;
   lastExpense = prefs.getInt('lastExpense') ?? 0;
   lastIncome = prefs.getInt('lastIncome') ?? 0;
-
-  log('onboarding = $onboarding');
-  log('username = $username');
-  log('currency = $currency');
-  log('expenses = $expenses');
-  log('incomes = $incomes');
 }
 
 Future<void> saveUser(String name, String currency) async {
