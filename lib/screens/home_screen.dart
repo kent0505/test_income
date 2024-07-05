@@ -34,15 +34,18 @@ class _HomeScreenState extends State<HomeScreen> {
     List data = box.get('incomes') ?? [];
     setState(() {
       incomesList = data.cast<IncomeModel>();
+      incomes = 0;
+      expenses = 0;
+      for (IncomeModel income in incomesList) {
+        if (income.income) {
+          incomes = incomes + income.amount;
+        } else {
+          expenses = expenses + income.amount;
+        }
+      }
     });
     log(incomesList.length.toString());
-    for (IncomeModel income in incomesList) {
-      if (income.income) {
-        incomes = incomes + income.amount;
-      } else {
-        expenses = expenses + income.amount;
-      }
-    }
+
     await saveIncomes();
   }
 
@@ -185,7 +188,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 3),
                     Container(
                       height: 26,
-                      width: 58,
+                      // width: 58,
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
                         color: const Color(0xffd9d9d9).withOpacity(0.25),
                         borderRadius: BorderRadius.circular(12),
@@ -467,7 +471,7 @@ class TabWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: index == 0 ? const Color(0xffD9D9D9).withOpacity(0.3) : null,
-      height: 60,
+      height: 70,
       child: Row(
         children: [
           const SizedBox(width: 50),

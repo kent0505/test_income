@@ -74,7 +74,6 @@ class _IncomeEditScreenState extends State<IncomeEditScreen> {
           title: 'Delete?',
           onYes: () async {
             incomesList.removeWhere((element) => element.id == widget.model.id);
-            await updateIncomes();
             await updateIncomes().then((value) {
               Navigator.pop(context);
             });

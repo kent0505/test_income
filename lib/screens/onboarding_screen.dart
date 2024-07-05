@@ -65,11 +65,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         children: [
           Positioned(
             top: 0,
-            right: 0,
             left: 0,
             child: Image.asset(
               'assets/ellipse1.png',
-              fit: BoxFit.fitWidth,
+              // fit: BoxFit.fitWidth,
             ),
           ),
           Positioned(
@@ -84,7 +83,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           ),
           Column(
             children: [
-              const SizedBox(height: 60),
+              const Spacer(),
               if (pageIndex == 0)
                 Image.asset('assets/rocket.png', height: 396)
               else if (pageIndex == 1)
@@ -210,7 +209,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   fontFamily: 'Inter',
                 ),
               ),
-              const SizedBox(height: 42),
+              // const SizedBox(height: 42),
+              const Spacer(),
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -236,7 +236,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   ),
                 ],
               ),
-              const SizedBox(height: 59),
+              const SizedBox(height: 30),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: BlackButton(
@@ -244,6 +244,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   onPressed: onNext,
                 ),
               ),
+
               const SizedBox(height: 72),
             ],
           ),

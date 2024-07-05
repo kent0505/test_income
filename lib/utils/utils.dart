@@ -10,6 +10,7 @@ int lastIncome = 0;
 
 Future<void> getData() async {
   final prefs = await SharedPreferences.getInstance();
+  // await prefs.remove('onboarding');
   onboarding = prefs.getBool('onboarding') ?? true;
   username = prefs.getString('username') ?? 'User';
   currency = prefs.getString('currency') ?? '\$';
