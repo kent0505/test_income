@@ -92,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 10),
                     Text(
-                      '${incomes + expenses}$currency',
+                      '${incomes - expenses}$currency',
                       style: const TextStyle(
                         color: Colors.white,
                         fontSize: 48,
@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     Text(
                       currency == '\$'
-                          ? '${convertDollarToEuro(incomes + expenses)}€'
+                          ? '${convertDollarToEuro(incomes - expenses)}€'
                           : '',
                       style: TextStyle(
                         color: const Color(0xffffffff).withOpacity(0.5),
@@ -319,6 +319,15 @@ class _HomeScreenState extends State<HomeScreen> {
                         physics: const BouncingScrollPhysics(),
                         scrollDirection: Axis.horizontal,
                         children: [
+                          if (incomesList.isEmpty)
+                            const Center(
+                              child: Text(
+                                'No data',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ),
                           RawScrollbar(
                             controller: scrollController1,
                             padding: const EdgeInsets.only(right: 8),
