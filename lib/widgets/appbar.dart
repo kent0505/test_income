@@ -10,7 +10,6 @@ class Appbar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 46,
-      // color: Colors.greenAccent,
       margin: EdgeInsets.only(top: MediaQuery.of(context).viewPadding.top),
       child: Row(
         children: [
@@ -20,7 +19,6 @@ class Appbar extends StatelessWidget {
             },
             padding: EdgeInsets.zero,
             child: const Row(
-              // mainAxisSize: MainAxisSize.min,
               children: [
                 SizedBox(width: 15),
                 Icon(

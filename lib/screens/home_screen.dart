@@ -1,9 +1,12 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:test_income/models/income_model.dart';
+import 'package:test_income/models/news_model.dart';
 import 'package:test_income/screens/income_add_screen.dart';
 import 'package:test_income/screens/income_edit_screen.dart';
 import 'package:test_income/screens/quiz_tab.dart';
@@ -18,7 +21,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final controller = PageController();
+  final scrollController1 = ScrollController();
+  final scrollController2 = ScrollController();
   int pageIndex = 0;
+  int tabIndex = 0;
 
   List<IncomeModel> incomesList = [];
 
@@ -42,7 +49,12 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   void initState() {
     super.initState();
-    if (pageIndex == 0) getIncomes();
+    controller.addListener(() {
+      setState(() {
+        pageIndex = controller.page!.toInt();
+      });
+    });
+    if (tabIndex == 0) getIncomes();
   }
 
   @override
@@ -50,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       body: Column(
         children: [
-          if (pageIndex == 0) ...[
+          if (tabIndex == 0) ...[
             SizedBox(height: 9 + MediaQuery.of(context).viewPadding.top),
             Center(
               child: Text(
@@ -121,7 +133,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     const SizedBox(height: 3),
                     Container(
                       height: 26,
-                      width: 58,
+                      padding: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
                         color: const Color(0xffd9d9d9).withOpacity(0.25),
                         borderRadius: BorderRadius.circular(12),
@@ -256,13 +268,13 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
             const SizedBox(height: 23),
           ],
-          if (pageIndex == 1) ...[
+          if (tabIndex == 1) ...[
             const QuizTab(),
           ],
-          if (pageIndex == 2) ...[
+          if (tabIndex == 2) ...[
             const SettingsTab(),
           ],
-          if (pageIndex == 0)
+          if (tabIndex == 0)
             Expanded(
               child: Container(
                 width: double.infinity,
@@ -276,9 +288,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 child: Column(
                   children: [
                     const SizedBox(height: 11),
-                    const Text(
-                      'History',
-                      style: TextStyle(
+                    Text(
+                      pageIndex == 0
+                          ? 'History'
+                          : pageIndex == 1
+                              ? 'News'
+                              : 'Exchange',
+                      style: const TextStyle(
                         color: Colors.white,
                         fontSize: 18,
                         fontWeight: FontWeight.w600,
@@ -286,58 +302,91 @@ class _HomeScreenState extends State<HomeScreen> {
                       ),
                     ),
                     const SizedBox(height: 8),
-                    Container(
-                      height: 8,
-                      width: 8,
-                      decoration: BoxDecoration(
-                        color: Colors.black,
-                        borderRadius: BorderRadius.circular(4),
-                        boxShadow: [
-                          BoxShadow(
-                            color: const Color(0xff000000).withOpacity(0.25),
-                            blurRadius: 4,
-                            spreadRadius: 0,
-                            offset: const Offset(0, 4),
-                          )
-                        ],
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        _PageIndicator(active: pageIndex == 0),
+                        const SizedBox(width: 5),
+                        _PageIndicator(active: pageIndex == 1),
+                        const SizedBox(width: 5),
+                        _PageIndicator(active: pageIndex == 2),
+                      ],
                     ),
                     const SizedBox(height: 2),
                     Expanded(
-                      child: RawScrollbar(
-                        padding: const EdgeInsets.only(right: 8),
-                        thumbColor: const Color(0xff3200BF).withOpacity(0.5),
-                        radius: const Radius.circular(12),
-                        thumbVisibility: true,
-                        thickness: 7,
-                        child: ListView(
-                          padding: const EdgeInsets.all(24),
-                          children: [
-                            ...List.generate(
-                              incomesList.length,
-                              (index) {
-                                return _IncomeCard(
-                                  model: incomesList[index],
-                                  onPressed: () {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                        builder: (context) {
-                                          return IncomeEditScreen(
-                                            model: incomesList[index],
-                                          );
-                                        },
-                                      ),
-                                    ).then((value) async {
-                                      log('GET CALLED');
-                                      await getIncomes();
-                                    });
+                      child: PageView(
+                        controller: controller,
+                        physics: const BouncingScrollPhysics(),
+                        scrollDirection: Axis.horizontal,
+                        children: [
+                          RawScrollbar(
+                            controller: scrollController1,
+                            padding: const EdgeInsets.only(right: 8),
+                            thumbColor:
+                                const Color(0xff3200BF).withOpacity(0.5),
+                            radius: const Radius.circular(12),
+                            thumbVisibility: true,
+                            thickness: 7,
+                            child: ListView(
+                              controller: scrollController1,
+                              padding: const EdgeInsets.all(24),
+                              children: [
+                                ...List.generate(
+                                  incomesList.length,
+                                  (index) {
+                                    return _IncomeCard(
+                                      model: incomesList[index],
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                            builder: (context) {
+                                              return IncomeEditScreen(
+                                                model: incomesList[index],
+                                              );
+                                            },
+                                          ),
+                                        ).then((value) async {
+                                          log('GET CALLED');
+                                          await getIncomes();
+                                        });
+                                      },
+                                    );
                                   },
-                                );
-                              },
+                                ),
+                              ],
                             ),
-                          ],
-                        ),
+                          ),
+                          RawScrollbar(
+                            padding: const EdgeInsets.only(right: 8),
+                            controller: scrollController2,
+                            thumbColor:
+                                const Color(0xff3200BF).withOpacity(0.5),
+                            radius: const Radius.circular(12),
+                            thumbVisibility: true,
+                            thickness: 7,
+                            child: ListView(
+                              controller: scrollController2,
+                              padding: const EdgeInsets.all(24),
+                              children: [
+                                ...List.generate(
+                                  newsData.length,
+                                  (index) {
+                                    return _NewsDataCard(
+                                      model: newsData[index],
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
+                          ),
+                          const Column(
+                            children: [
+                              SizedBox(height: 22),
+                              _ExchangeCard(),
+                            ],
+                          ),
+                        ],
                       ),
                     ),
                   ],
@@ -347,10 +396,10 @@ class _HomeScreenState extends State<HomeScreen> {
           else
             const Spacer(),
           TabWidget(
-            index: pageIndex,
+            index: tabIndex,
             onTap: (value) {
               setState(() {
-                pageIndex = value;
+                tabIndex = value;
               });
             },
           ),
@@ -640,6 +689,226 @@ class _IncomeCard extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+}
+
+class _PageIndicator extends StatelessWidget {
+  const _PageIndicator({required this.active});
+
+  final bool active;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 8,
+      width: 8,
+      decoration: BoxDecoration(
+        color: active ? Colors.black : Colors.white,
+        borderRadius: BorderRadius.circular(4),
+        boxShadow: [
+          if (active)
+            BoxShadow(
+              color: const Color(0xff000000).withOpacity(0.25),
+              blurRadius: 4,
+              spreadRadius: 0,
+              offset: const Offset(0, 4),
+            )
+        ],
+      ),
+    );
+  }
+}
+
+class _ExchangeCard extends StatelessWidget {
+  const _ExchangeCard();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 140,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
+      decoration: BoxDecoration(
+        color: const Color(0xff000000).withOpacity(0.24),
+        borderRadius: BorderRadius.circular(32),
+      ),
+      child: Row(
+        children: [
+          const SizedBox(width: 20),
+          Column(
+            children: [
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset('assets/usd.svg'),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  const Text(
+                    'USD',
+                    style: TextStyle(
+                      color: Color(0xffFAFAFA),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 25),
+              const Text(
+                '\$1,00',
+                style: TextStyle(
+                  color: Color(0xffFAFAFA),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const Spacer(),
+          Container(
+            height: 40,
+            width: 40,
+            decoration: BoxDecoration(
+              color: const Color(0xffFAFAFA).withOpacity(0.08),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Center(
+              child: SvgPicture.asset('assets/swap.svg'),
+            ),
+          ),
+          const Spacer(),
+          Column(
+            children: [
+              const SizedBox(height: 10),
+              Row(
+                children: [
+                  const Text(
+                    'USD',
+                    style: TextStyle(
+                      color: Color(0xffFAFAFA),
+                      fontSize: 18,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Container(
+                    height: 40,
+                    width: 40,
+                    decoration: BoxDecoration(
+                      color: Colors.black,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: Center(
+                      child: SvgPicture.asset('assets/eur.svg'),
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 25),
+              const Text(
+                '€0,92',
+                style: TextStyle(
+                  color: Color(0xffFAFAFA),
+                  fontSize: 18,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(width: 20),
+        ],
+      ),
+    );
+  }
+}
+
+class _NewsDataCard extends StatelessWidget {
+  const _NewsDataCard({required this.model});
+
+  final NewsModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Container(
+          padding: const EdgeInsets.all(12),
+          decoration: BoxDecoration(
+            color: const Color(0xff000000).withOpacity(0.24),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              ClipRRect(
+                borderRadius: BorderRadius.circular(12),
+                child: CachedNetworkImage(
+                  imageUrl: model.image,
+                  height: 67,
+                ),
+              ),
+              const SizedBox(width: 6),
+              Expanded(
+                child: Column(
+                  children: [
+                    Text(
+                      model.title,
+                      style: const TextStyle(
+                        color: Colors.white,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    Text(
+                      model.subtitle,
+                      maxLines: 3,
+                      style: TextStyle(
+                        color: const Color(0xffffffff).withOpacity(0.5),
+                        fontSize: 10,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        const SizedBox(height: 3),
+        Row(
+          children: [
+            const Spacer(),
+            Text(
+              model.date,
+              style: TextStyle(
+                color: const Color(0xffffffff).withOpacity(0.5),
+                fontSize: 8,
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+            const SizedBox(width: 3),
+            Container(
+              height: 3,
+              width: 3,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(2),
+                color: const Color(0xffffffff).withOpacity(0.5),
+              ),
+            ),
+            const SizedBox(width: 8),
+          ],
+        ),
+        const SizedBox(height: 18),
+      ],
     );
   }
 }
