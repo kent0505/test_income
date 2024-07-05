@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       '${incomes - expenses}$currency',
                       style: const TextStyle(
                         color: Colors.white,
-                        fontSize: 48,
+                        fontSize: 40,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Poppins',
                       ),
@@ -114,7 +114,7 @@ class _HomeScreenState extends State<HomeScreen> {
                           : '',
                       style: TextStyle(
                         color: const Color(0xffffffff).withOpacity(0.5),
-                        fontSize: 48,
+                        fontSize: 40,
                         fontWeight: FontWeight.w600,
                         fontFamily: 'Poppins',
                       ),
@@ -135,7 +135,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 3),
                     Container(
-                      height: 26,
+                      // height: 26,
+                      width: 58,
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
                         color: const Color(0xffd9d9d9).withOpacity(0.25),
@@ -187,8 +188,8 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                     const SizedBox(height: 3),
                     Container(
-                      height: 26,
-                      // width: 58,
+                      // height: 26,
+                      width: 58,
                       padding: const EdgeInsets.symmetric(horizontal: 5),
                       decoration: BoxDecoration(
                         color: const Color(0xffd9d9d9).withOpacity(0.25),
@@ -331,45 +332,46 @@ class _HomeScreenState extends State<HomeScreen> {
                                   color: Colors.white,
                                 ),
                               ),
-                            ),
-                          RawScrollbar(
-                            controller: scrollController1,
-                            padding: const EdgeInsets.only(right: 8),
-                            thumbColor:
-                                const Color(0xff3200BF).withOpacity(0.5),
-                            radius: const Radius.circular(12),
-                            thumbVisibility: true,
-                            thickness: 7,
-                            child: ListView(
+                            )
+                          else
+                            RawScrollbar(
                               controller: scrollController1,
-                              padding: const EdgeInsets.all(24),
-                              children: [
-                                ...List.generate(
-                                  incomesList.length,
-                                  (index) {
-                                    return _IncomeCard(
-                                      model: incomesList[index],
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                            builder: (context) {
-                                              return IncomeEditScreen(
-                                                model: incomesList[index],
-                                              );
-                                            },
-                                          ),
-                                        ).then((value) async {
-                                          log('GET CALLED');
-                                          await getIncomes();
-                                        });
-                                      },
-                                    );
-                                  },
-                                ),
-                              ],
+                              padding: const EdgeInsets.only(right: 8),
+                              thumbColor:
+                                  const Color(0xff3200BF).withOpacity(0.5),
+                              radius: const Radius.circular(12),
+                              thumbVisibility: true,
+                              thickness: 7,
+                              child: ListView(
+                                controller: scrollController1,
+                                padding: const EdgeInsets.all(24),
+                                children: [
+                                  ...List.generate(
+                                    incomesList.length,
+                                    (index) {
+                                      return _IncomeCard(
+                                        model: incomesList[index],
+                                        onPressed: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) {
+                                                return IncomeEditScreen(
+                                                  model: incomesList[index],
+                                                );
+                                              },
+                                            ),
+                                          ).then((value) async {
+                                            log('GET CALLED');
+                                            await getIncomes();
+                                          });
+                                        },
+                                      );
+                                    },
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
                           RawScrollbar(
                             padding: const EdgeInsets.only(right: 8),
                             controller: scrollController2,

@@ -34,7 +34,7 @@ class TxtField extends StatelessWidget {
         inputFormatters: [
           if (number) ...[
             FilteringTextInputFormatter.digitsOnly,
-            LengthLimitingTextInputFormatter(7),
+            LengthLimitingTextInputFormatter(6),
           ] else
             LengthLimitingTextInputFormatter(limit),
         ],
